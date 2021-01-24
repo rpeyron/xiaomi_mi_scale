@@ -295,7 +295,7 @@ class ScanProcessor():
         message += ',"timestamp":"' + mitdatetime + '"'
         message += '}'
         try:
-            sys.stdout.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Publishing data to topic {MQTT_PREFIX + '/' + user + '/weight'}: {message}\n")
+            sys.stdout.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Publishing data to topic "+ (MQTT_PREFIX + '/' + user + '/weight') + ": " + message +"\n")
             publish.single(
                 MQTT_PREFIX + '/' + user + '/weight',
                 message,
@@ -307,7 +307,7 @@ class ScanProcessor():
             )
             sys.stdout.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Data Published ...\n")
         except Exception as error:
-            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Could not publish to MQTT: {error}\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Could not publish to MQTT: " + error + "\n")
             raise
 
 def main():
@@ -319,10 +319,10 @@ def main():
             scanner = btle.Scanner(HCI_DEV).withDelegate(ScanProcessor())
             scanner.scan(5) # Adding passive=True to try and fix issues on RPi devices
         except BTLEDisconnectError as error:
-            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - btle disconnected: {error}\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - btle disconnected: "+error+"\n")
             pass
         except BTLEManagementError as error:
-            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Bluetooth connection error: {error}\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Bluetooth connection error: "+error+"\n")
             if BluetoothFailCounter >= 4:
                 sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - 5+ Bluetooth connection errors. Resetting Bluetooth...\n")
                 cmd = 'hciconfig hci' + HCI_DEV + ' down'
@@ -336,7 +336,7 @@ def main():
                 BluetoothFailCounter+=1
             pass
         except Exception as error:
-            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Error while running the script: {error}\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Error while running the script: "+error+"\n")
             pass
         else:
             BluetoothFailCounter = 0
