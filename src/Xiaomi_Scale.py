@@ -20,18 +20,18 @@ import Xiaomi_Scale_Body_Metrics
 # First Log msg
 sys.stdout.write(' \n')
 sys.stdout.write('-------------------------------------\n')
-sys.stdout.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Starting Xiaomi mi Scale...\n")
+sys.stdout.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Starting Xiaomi mi Scale...\n")
 
 # Configuraiton...
 # Trying To Load Config From options.json (HA Add-On)
 try:
     with open('/data/options.json') as json_file:
-        sys.stdout.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Loading Config From Add-On Options...\n")
+        sys.stdout.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Loading Config From Add-On Options...\n")
         data = json.load(json_file)
         try:
             MISCALE_MAC = data["MISCALE_MAC"]
         except:
-            sys.stderr.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - MAC Address not provided...\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - MAC Address not provided...\n")
             raise
         try:
             MQTT_USERNAME = data["MQTT_USERNAME"]
@@ -46,7 +46,7 @@ try:
         try:
             MQTT_HOST = data["MQTT_HOST"]
         except:
-            sys.stderr.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - MQTT Host not provided...\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - MQTT Host not provided...\n")
             raise
         try:
             MQTT_PORT = int(data["MQTT_PORT"])
@@ -81,27 +81,27 @@ try:
         try:
             USER1_GT = int(data["USER1_GT"])
         except:
-            sys.stderr.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - USER1_GT not provided...\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - USER1_GT not provided...\n")
             raise
         try:
             USER1_SEX = data["USER1_SEX"]
         except:
-            sys.stderr.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - USER1_SEX not provided...\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - USER1_SEX not provided...\n")
             raise
         try:
             USER1_NAME = data["USER1_NAME"]
         except:
-            sys.stderr.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - USER1_NAME not provided...\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - USER1_NAME not provided...\n")
             raise
         try:
             USER1_HEIGHT = int(data["USER1_HEIGHT"])
         except:
-            sys.stderr.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - USER1_HEIGHT not provided...\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - USER1_HEIGHT not provided...\n")
             raise
         try:
             USER1_DOB = data["USER1_DOB"]
         except:
-            sys.stderr.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - USER1_DOB not provided...\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - USER1_DOB not provided...\n")
             raise
         try:
             USER2_LT = int(data["USER2_LT"])
@@ -148,12 +148,12 @@ try:
         except:
             USER3_DOB = "1990-01-01"
             pass
-        sys.stdout.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Config Loaded...\n")
+        sys.stdout.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Config Loaded...\n")
 
 # Failed to open options.json, Loading Config From Environment (Not HA Add-On)
 except FileNotFoundError:
     pass
-    sys.stdout.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Loading Config From OS Environment...\n")
+    sys.stdout.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Loading Config From OS Environment...\n")
     MISCALE_MAC = os.getenv('MISCALE_MAC', '')
     MQTT_USERNAME = os.getenv('MQTT_USERNAME', 'username')
     MQTT_PASSWORD = os.getenv('MQTT_PASSWORD', None)
@@ -186,7 +186,7 @@ except FileNotFoundError:
     USER3_NAME = os.getenv('USER3_NAME', 'Unknown User') # Name of the user
     USER3_HEIGHT = int(os.getenv('USER3_HEIGHT', '175')) # Height (in cm) of the user
     USER3_DOB = os.getenv('USER3_DOB', '1988-01-01') # DOB (in yyyy-mm-dd format)
-    sys.stdout.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Config Loaded...\n")
+    sys.stdout.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Config Loaded...\n")
 
 OLD_MEASURE = ''
 
@@ -203,7 +203,7 @@ def discovery():
                         port=MQTT_PORT,
                         auth={'username':MQTT_USERNAME, 'password':MQTT_PASSWORD}
                     )
-    sys.stdout.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Discovery Completed...\n")
+    sys.stdout.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Discovery Completed...\n")
 
 
 class ScanProcessor():
@@ -295,7 +295,7 @@ class ScanProcessor():
         message += ',"timestamp":"' + mitdatetime + '"'
         message += '}'
         try:
-            sys.stdout.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Publishing data to topic {MQTT_PREFIX + '/' + user + '/weight'}: {message}\n")
+            sys.stdout.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Publishing data to topic {MQTT_PREFIX + '/' + user + '/weight'}: {message}\n")
             publish.single(
                 MQTT_PREFIX + '/' + user + '/weight',
                 message,
@@ -305,9 +305,9 @@ class ScanProcessor():
                 port=MQTT_PORT,
                 auth={'username':MQTT_USERNAME, 'password':MQTT_PASSWORD}
             )
-            sys.stdout.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Data Published ...\n")
+            sys.stdout.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Data Published ...\n")
         except Exception as error:
-            sys.stderr.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Could not publish to MQTT: {error}\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Could not publish to MQTT: {error}\n")
             raise
 
 def main():
@@ -319,12 +319,12 @@ def main():
             scanner = btle.Scanner(HCI_DEV).withDelegate(ScanProcessor())
             scanner.scan(5) # Adding passive=True to try and fix issues on RPi devices
         except BTLEDisconnectError as error:
-            sys.stderr.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - btle disconnected: {error}\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - btle disconnected: {error}\n")
             pass
         except BTLEManagementError as error:
-            sys.stderr.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Bluetooth connection error: {error}\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Bluetooth connection error: {error}\n")
             if BluetoothFailCounter >= 4:
-                sys.stderr.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - 5+ Bluetooth connection errors. Resetting Bluetooth...\n")
+                sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - 5+ Bluetooth connection errors. Resetting Bluetooth...\n")
                 cmd = 'hciconfig hci' + HCI_DEV + ' down'
                 ps = subprocess.Popen(cmd, shell=True)
                 time.sleep(1)
@@ -336,7 +336,7 @@ def main():
                 BluetoothFailCounter+=1
             pass
         except Exception as error:
-            sys.stderr.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Error while running the script: {error}\n")
+            sys.stderr.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " - Error while running the script: {error}\n")
             pass
         else:
             BluetoothFailCounter = 0
